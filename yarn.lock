@@ -4782,14 +4782,14 @@ __metadata:
   linkType: hard
 
 "@octokit/plugin-throttling@npm:^4.0.0":
-  version: 4.3.0
-  resolution: "@octokit/plugin-throttling@npm:4.3.0"
+  version: 4.3.2
+  resolution: "@octokit/plugin-throttling@npm:4.3.2"
   dependencies:
-    "@octokit/types": ^7.0.0
+    "@octokit/types": ^8.0.0
     bottleneck: ^2.15.3
   peerDependencies:
     "@octokit/core": ^4.0.0
-  checksum: f2c23c070c9a1afee80a195a4da66dca568be40be3be5532bb32eabc0e22a53ab591f7109a9499ac9eaebbc873c08cca48c90e4f8af2e2010db5f8bd99e280ae
+  checksum: 2c9ef9be2cc1b9cb01d4d9f04e82246ccaa41ab05a4dc315f926b11abf5a99e3a38a98756fbb7f9e8d4c4f5e43f052c1dbd11c062017096dd943b8896c9e414c
   languageName: node
   linkType: hard
 
