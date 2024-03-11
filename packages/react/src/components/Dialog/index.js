@@ -80,6 +80,7 @@ const Dialog = React.forwardRef(
     };
 
     const handleClose = (ev) => {
+      ev.stopPropagation(); /* prevents nested dialog closing all parent dialog */
       if (onClose) {
         onClose(ev);
       }

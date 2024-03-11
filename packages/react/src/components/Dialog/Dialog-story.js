@@ -17,7 +17,7 @@ export default {
   component: Dialog,
 };
 
-export const Default = ({ open: _open, ...args }) => {
+const DialogWithState = ({ children, open: _open, ...args }) => {
   const [open, setOpen] = useState(_open);
 
   const handleOpenDialog = () => {
@@ -47,12 +47,7 @@ export const Default = ({ open: _open, ...args }) => {
         Toggle open
       </Button>
       <Dialog onClose={handleCloseEvent} open={open} {...args}>
-        <p>
-          Elit hic at labore culpa itaque fugiat. Consequuntur iure autem autem
-          officiis dolores facilis nulla earum! Neque quia nemo sequi assumenda
-          ratione officia Voluptate beatae eligendi placeat nemo laborum,
-          ratione.
-        </p>
+        {children}
         <Button
           type="button"
           kind="secondary"
@@ -62,5 +57,47 @@ export const Default = ({ open: _open, ...args }) => {
         </Button>
       </Dialog>
     </div>
+  );
+};
+
+export const Default = ({ open: _open, ...args }) => {
+  return (
+    <DialogWithState {...args}>
+      <p>
+        Elit hic at labore culpa itaque fugiat. Consequuntur iure autem autem
+        officiis dolores facilis nulla earum! Neque quia nemo sequi assumenda
+        ratione officia Voluptate beatae eligendi placeat nemo laborum, ratione.
+      </p>
+    </DialogWithState>
+  );
+};
+
+const DialogWithNestedDialog = ({ nest, ...args }) => {
+  return (
+    <DialogWithState {...args}>
+      <p>
+        Elit hic at labore culpa itaque fugiat. Consequuntur iure autem autem
+        officiis dolores facilis nulla earum! Neque quia nemo sequi assumenda
+        ratione officia Voluptate beatae eligendi placeat nemo laborum, ratione.
+      </p>
+      {nest > 1 ? (
+        <DialogWithNestedDialog
+          nest={nest - 1}
+          {...args}></DialogWithNestedDialog>
+      ) : null}
+    </DialogWithState>
+  );
+};
+
+export const DefaultNest = (args) => {
+  return (
+    <DialogWithState {...args}>
+      <p>
+        Elit hic at labore culpa itaque fugiat. Consequuntur iure autem autem
+        officiis dolores facilis nulla earum! Neque quia nemo sequi assumenda
+        ratione officia Voluptate beatae eligendi placeat nemo laborum, ratione.
+      </p>
+      <DialogWithNestedDialog nest={2} {...args}></DialogWithNestedDialog>
+    </DialogWithState>
   );
 };
