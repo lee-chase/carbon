@@ -12,6 +12,27 @@
 @use 'config' as *;
 @use 'breakpoint' as *;
 
+/// Helper mixin to apply margin-based padding at md+ breakpoints
+/// @param {Map} $breakpoints - The breakpoints map
+/// @param {String} $property - The CSS property to set (e.g., 'padding-inline')
+/// @param {Number|null} $gutter-offset - Optional gutter offset to add to margin (e.g., math.div($grid-gutter, 2))
+@mixin -apply-margin-padding($breakpoints, $property, $gutter-offset: null) {
+  @each $key, $value in $breakpoints {
+    @if not is-smallest-breakpoint($key, $breakpoints) {
+      $margin: get-margin($breakpoints, $key);
+      @if $margin > 0 {
+        @include breakpoint($key) {
+          @if $gutter-offset {
+            #{$property}: calc(#{$margin} + #{$gutter-offset});
+          } @else {
+            #{$property}: #{$margin};
+          }
+        }
+      }
+    }
+  }
+}
+
 /// Emit all the styles related to the CSS Grid, these include:
 /// - The base grid class
 /// - The various gutter modes
@@ -115,16 +136,11 @@
     --cds-grid-gutter-end: 0rem; /* stylelint-disable-line length-zero-no-unit */
 
     // At md+: add margin to the padding
-    @each $key, $value in $breakpoints {
-      @if not is-smallest-breakpoint($key, $breakpoints) {
-        $margin: get-margin($breakpoints, $key);
-        @if $margin > 0 {
-          @include breakpoint($key) {
-            padding-inline: calc(#{$margin} + var(--cds-grid-gutter) / 2);
-          }
-        }
-      }
-    }
+    @include -apply-margin-padding(
+      $breakpoints,
+      padding-inline,
+      math.div($grid-gutter, 2)
+    );
   }
 
   .#{$prefix}--css-grid--v12.#{$prefix}--css-grid--no-row-gap {
@@ -190,17 +206,12 @@
     row-gap: calc(var(--cds-grid-gutter) / 2);
 
     // At md+: add v11 margins to inline padding
-    @each $key, $value in $breakpoints {
-      @if not is-smallest-breakpoint($key, $breakpoints) {
-        $margin: get-margin($breakpoints, $key);
-        @if $margin > 0 {
-          @include breakpoint($key) {
-            padding-inline-end: calc(#{$margin} + var(--cds-grid-gutter) / 2);
-            padding-inline-start: #{$margin};
-          }
-        }
-      }
-    }
+    @include -apply-margin-padding(
+      $breakpoints,
+      padding-inline-end,
+      math.div($grid-gutter, 2)
+    );
+    @include -apply-margin-padding($breakpoints, padding-inline-start);
   }
 
   // v12 Condensed mode
@@ -211,17 +222,54 @@
     row-gap: var(--cds-grid-gutter-condensed);
 
     // At md+: add v11 margins to inline padding
-    @each $key, $value in $breakpoints {
-      @if not is-smallest-breakpoint($key, $breakpoints) {
-        $margin: get-margin($breakpoints, $key);
-        @if $margin > 0 {
-          @include breakpoint($key) {
-            padding-inline-end: #{$margin};
-            padding-inline-start: #{$margin};
-          }
-        }
-      }
-    }
+    @include -apply-margin-padding($breakpoints, padding-inline-end);
+    @include -apply-margin-padding($breakpoints, padding-inline-start);
+  }
+
+  // v12 Subgrid support for mixed gutters
+  // Treat any top level v12 grid as condensed (no padding) if it contains a subgrid
+  .#{$prefix}--css-grid--v12:has(.#{$prefix}--subgrid) {
+    padding-inline: 0;
+
+    // At md+: only use the margin for padding (no gutter padding)
+    @include -apply-margin-padding($breakpoints, padding-inline);
+    --cds-grid-gutter: 0;
+  }
+
+  .#{$prefix}--css-grid--v12 .#{$prefix}--subgrid {
+    --cds-grid-gutter: #{$grid-gutter};
+
+    column-gap: var(--cds-grid-gutter);
+    margin-inline: 0;
+    padding-inline: 0;
+    row-gap: var(--cds-grid-gutter);
+    --cds-grid-mode-start: 0rem; /* stylelint-disable-line length-zero-no-unit */
+    --cds-grid-mode-end: 0rem; /* stylelint-disable-line length-zero-no-unit */
+  }
+
+  .#{$prefix}--css-grid--v12 .#{$prefix}--subgrid--wide {
+    --cds-grid-gutter: #{$grid-gutter};
+
+    column-gap: var(--cds-grid-gutter);
+    // padding-inline: calc(var(--cds-grid-gutter) / 2);
+    row-gap: var(--cds-grid-gutter);
+  }
+
+  .#{$prefix}--css-grid--v12 .#{$prefix}--subgrid--narrow {
+    --cds-grid-gutter: #{$grid-gutter};
+
+    column-gap: calc(var(--cds-grid-gutter) / 2);
+    // padding-inline-end: calc(var(--cds-grid-gutter) / 2);
+    // padding-inline-start: 0;
+    row-gap: calc(var(--cds-grid-gutter) / 2);
+  }
+
+  .#{$prefix}--css-grid--v12 .#{$prefix}--subgrid--condensed {
+    --cds-grid-gutter: #{$grid-gutter-condensed};
+
+    column-gap: var(--cds-grid-gutter-condensed);
+    // padding-inline: 0;
+    row-gap: var(--cds-grid-gutter-condensed);
   }
 
   // -----------------------------------------------------------------------------
@@ -252,6 +300,15 @@
         calc(var(--cds-grid-mode-start) * -1);
     }
   }
+
+  // // v12 subgrids don't use negative margins since columns have no margins
+  // .#{$prefix}--css-grid--v12 .#{$prefix}--subgrid {
+  //   margin-inline: 0;
+
+  //   [dir='rtl'] & {
+  //     margin-inline: 0;
+  //   }
+  // }
 
   // Support the gutter modes in subgrids
   .#{$prefix}--subgrid--wide {

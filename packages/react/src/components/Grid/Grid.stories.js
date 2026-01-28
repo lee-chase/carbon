@@ -378,3 +378,67 @@ export const Offset = () => {
     </div>
   );
 };
+
+export const v12Test = () => {
+  return (
+    <>
+      <Grid>
+        <Column lg={8}>
+          condensed ↓
+          <Grid condensed>
+            <Column lg={8}>
+              narrow ↓
+              <Grid narrow>
+                <Column lg={8} />
+              </Grid>
+            </Column>
+
+            <Column lg={4} />
+            <Column lg={4} />
+          </Grid>
+        </Column>
+        <Column lg={8}>
+          condensed
+          <Grid condensed>
+            <Column lg={4} />
+            <Column lg={4} />
+            <Column lg={4} />
+            <Column lg={4} />
+          </Grid>
+        </Column>
+      </Grid>
+      <Grid>
+        <Column lg={16}>
+          Condensed ↓
+          <Grid condensed>
+            <Column sm={4} />
+            <Column sm={4} />
+            <Column sm={4} />
+            <Column sm={4} />
+          </Grid>
+          Narrow ↓
+          <Grid narrow>
+            <Column sm={4} />
+            <Column sm={4} />
+            <Column sm={4} />
+            <Column sm={4} />
+          </Grid>
+        </Column>
+      </Grid>
+      Condensed ↓
+      <Grid condensed>
+        <Column sm={4} />
+        <Column sm={4} />
+        <Column sm={4} />
+        <Column sm={4} />
+      </Grid>
+      Narrow ↓
+      <Grid narrow>
+        <Column sm={4} />
+        <Column sm={4} />
+        <Column sm={4} />
+        <Column sm={4} />
+      </Grid>
+    </>
+  );
+};

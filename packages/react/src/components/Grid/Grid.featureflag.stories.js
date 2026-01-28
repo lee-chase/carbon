@@ -272,7 +272,7 @@ export const V12MixedGutterModes = () => {
           </Grid>
         </Column>
       </Grid>
-      <Grid narrow>
+      <Grid>
         <Column span={8}>
           <Grid>
             <Column span={4} />
@@ -349,5 +349,69 @@ export const V12Offset = () => {
         lg={{ span: '75%', offset: 4 }}
       />
     </Grid>
+  );
+};
+
+export const v12Test = () => {
+  return (
+    <>
+      <Grid condensed>
+        <Column lg={8}>
+          condensed ↓
+          <Grid condensed>
+            <Column lg={8}>
+              narrow ↓
+              <Grid narrow>
+                <Column lg={8} />
+              </Grid>
+            </Column>
+
+            <Column lg={4} />
+            <Column lg={4} />
+          </Grid>
+        </Column>
+        <Column lg={8}>
+          condensed
+          <Grid condensed>
+            <Column lg={4} />
+            <Column lg={4} />
+            <Column lg={4} />
+            <Column lg={4} />
+          </Grid>
+        </Column>
+      </Grid>
+      <Grid condensed>
+        <Column lg={16}>
+          Condensed ↓
+          <Grid condensed>
+            <Column sm={4} />
+            <Column sm={4} />
+            <Column sm={4} />
+            <Column sm={4} />
+          </Grid>
+          Narrow ↓
+          <Grid narrow>
+            <Column sm={4} />
+            <Column sm={4} />
+            <Column sm={4} />
+            <Column sm={4} />
+          </Grid>
+        </Column>
+      </Grid>
+      Condensed ↓
+      <Grid condensed>
+        <Column sm={4} />
+        <Column sm={4} />
+        <Column sm={4} />
+        <Column sm={4} />
+      </Grid>
+      Narrow ↓
+      <Grid narrow>
+        <Column sm={4} />
+        <Column sm={4} />
+        <Column sm={4} />
+        <Column sm={4} />
+      </Grid>
+    </>
   );
 };
